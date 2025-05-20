@@ -1,0 +1,10 @@
+model Mesa {
+  idMesa Int @id // Numero de la mesa
+  disponible Boolean
+  idCliente String?  
+  capacidad Int
+
+  cliente Cliente? @relation(fields: [idCliente], references: [idCliente])
+
+  @@map("mesas")
+}

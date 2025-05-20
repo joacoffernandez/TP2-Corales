@@ -1,0 +1,10 @@
+model PedidoDet {
+    idPedidoDet String @id @default(cuid())
+    idPedidoCab String
+    idPlato String
+
+    plato Plato @relation(fields: [idPlato], references: [idPlato])
+    pedidoCab PedidoCab @relation(fields: [idPedidoCab], references: [idPedidoCab])
+
+    @@map("pedidos_detalle")
+}

@@ -1,0 +1,13 @@
+model Direccion {
+  idDireccion  String @id @default(cuid())
+  calle String
+  altura  String
+  barrio  String
+  codigo_postal Int
+  idCliente String
+
+  cliente Cliente @relation(fields: [idCliente], references: [idCliente])
+  pedidos PedidoCab[]
+
+  @@map("direcciones") // Necesario? 
+}

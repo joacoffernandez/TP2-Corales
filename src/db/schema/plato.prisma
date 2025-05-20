@@ -1,0 +1,12 @@
+model Plato {
+  idPlato      String @id @default(cuid())
+  nombre String
+  descripcion String 
+  precio Int
+  idCategoria String
+
+  categoria CategoriaPlato @relation(fields: [idCategoria], references: [idCategoria])
+  pedidos PedidoDet[]
+
+  @@map("platos")
+}

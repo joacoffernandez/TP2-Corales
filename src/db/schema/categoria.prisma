@@ -1,0 +1,9 @@
+model CategoriaPlato {
+  idCategoria        String @id @default(cuid())
+  nombre String
+  desc String 
+
+  platos Plato[]
+
+  @@map("categoriasPlatos")
+}

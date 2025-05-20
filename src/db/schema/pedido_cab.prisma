@@ -1,0 +1,15 @@
+model PedidoCab {
+    idPedidoCab String @id @default(cuid()) @map("idPedido")
+    idCliente String
+    idEstado String
+    monto Float
+    descuento Int
+    idDireccion String
+
+    cliente Cliente @relation(fields: [idCliente], references: [idCliente])
+    estado  EstadoPedido @relation(fields: [idEstado], references: [idEstadoPedido])
+    direccion Direccion @relation(fields: [idDireccion], references: [idDireccion])
+    pedidos_det PedidoDet[]
+
+    @@map("pedidos_cab")
+}
