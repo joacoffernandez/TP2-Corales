@@ -1,5 +1,5 @@
 model EstadoPedido {
-  idEstadoPedido      String @id @default(cuid())
+  idEstadoPedido Int @id 
   nombre String 
   descripcion String 
  

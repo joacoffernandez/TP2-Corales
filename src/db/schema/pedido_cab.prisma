@@ -1,7 +1,7 @@
 model PedidoCab {
     idPedidoCab String @id @default(cuid()) @map("idPedido")
     idCliente String
-    idEstado String
+    idEstado Int
     monto Float
     descuento Int
     idDireccion String

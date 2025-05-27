@@ -5,7 +5,7 @@ model Cliente {
   password  String // hashed
   telefono Int
 
-  direcciones Direccion[]
+  direcciones Direccion[] 
   mesasReservadas Mesa[]
   pedidos PedidoCab[]
 
