@@ -1,13 +1,13 @@
-import { Cliente } from "@prisma/cliente";
+import { Cliente } from "@prisma/client";
 
 import { db } from "../db/db";
 
 export class ClienteRepository {
 
-    async createUser(nombre: string, email: string, password: string, telefono: string): Promise<Cliente> {
-        const user = await db.user.create({
+    async createCliente(username: string, email: string, password: string, telefono: number): Promise<Cliente> {
+        const user = await db.cliente.create({
             data: {
-                nombre,
+                username,
                 email,
                 password,
                 telefono
