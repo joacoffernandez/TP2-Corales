@@ -3,7 +3,7 @@ model CategoriaPlato {
   nombre String
   desc String 
 
-  platos Plato[]
+  //platos Plato[]
 
   @@map("categoriasPlatos")
 }

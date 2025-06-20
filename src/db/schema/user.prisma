@@ -1,13 +1,20 @@
-model Cliente {
-  idCliente        String @id @default(cuid())
+enum Rol {
+  USER
+  MOZO
+  ADMIN
+}
+
+model User {
+  idUser        String @id @default(cuid())
   username String @unique
   email     String @unique
   password  String // hashed
   telefono Int
+  rol      Rol @default(USER)
 
   direcciones Direccion[] 
   mesasReservadas Mesa[]
   pedidos PedidoCab[]
 
-  @@map("clientes")
+  @@map("users")
 }

@@ -4,9 +4,9 @@ model Direccion {
   altura  String
   barrio  String
   codigo_postal Int
-  idCliente String
+  idUser String @map("idUser")
 
-  cliente Cliente @relation(fields: [idCliente], references: [idCliente])
+  cliente User @relation(fields: [idUser], references: [idUser])
   pedidos PedidoCab[]
 
   @@map("direcciones") // Necesario? 

@@ -3,7 +3,7 @@ model EstadoPedido {
   nombre String 
   descripcion String 
  
-  pedidos PedidoCab[]
+  //pedidos PedidoCab[]
 
   @@map("estadosPedidos")
 }

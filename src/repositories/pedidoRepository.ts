@@ -1,68 +1,42 @@
-import { PedidoCab } from "@prisma/pedido_cab";
+import { Mesa } from "@prisma/client";
 
 import { db } from "../db/db";
 
-export class PedidoCabRepository {
+export class PedidoRepository {
 
-    async createPedidoCab(idcliente: string, monto: number, descuento:number, iddireccion:string): Promise<PedidoCab> {
-        const user = await db.user.e({
+    async createPedido(id: number, capacidad: number): Promise<Mesa | null> {
+        const mesa = await db.pedidoCab.create({
             data: {
-                idcliente,
-                idestado: 0,
-                monto,
-                descuento,
-                iddireccion
+                idMesa: id, 
+                disponible: true,
+                capacidad: capacidad
             }
         });
-        return user;
-    }
- 
-    async changePedidoState(idPedidoCab: string, newEstadoId: number): Promise<PedidoCab> {
-        const updatedPedido = await db.pedidoCab.update({
-            where: {
-                idPedidoCab: idPedidoCab
-            },
-            data: {
-                idEstado: newEstadoId
-            }
-        });
-
-        return updatedPedido;
-        }
-
-
-    async getPedidosByUser(idCliente: string): Promise<PedidoCab[]> {
-        const pedidos = await db.pedidoCab.findMany({
-            where: {
-                idCliente: idCliente
-            },
-            include: {
-                estado: true,
-                direccion: true,
-                pedidos_det: true,
-            }
-        });
-
-        return pedidos;
+        return mesa;
     }
 
-
-    async getPedidosByState(idEstado: number): Promise<PedidoCab[]> {
-        const pedidos = await db.pedidoCab.findMany({
-            where: {
-                idEstado: idEstado
-            },
-                include: {
-                estado: true,
-                direccion: true,
-                pedidos_det: true,
-            }
+    async getAllPedidos(): Promise<Mesa[]> {
+        const mesas = await db.mesa.findMany({
+            where: { disponible: true }
         });
-
-        return pedidos;
+        return mesas;
     }
 
+    async getPedidoById(id: number): Promise<Mesa | null> {
+        const mesa = await db.mesa.findUnique({
+            where: { idMesa: id }
+        });
+        return mesa;
+    }
 
-   
-
+    async reservarMesa(id: number, idUser: string): Promise<Mesa | null> {
+        const updatedMesa = await db.mesa.update({
+            where: { idMesa: id },
+            data: { 
+                disponible: false, 
+                idUser: idUser 
+            }
+        });
+        return updatedMesa;
+    }
 }

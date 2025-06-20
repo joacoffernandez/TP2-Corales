@@ -1,11 +1,17 @@
+enum Categoria {
+  ENTRADA
+  PLATO_PRINCIPAL
+  POSTRE
+}
+
 model Plato {
   idPlato      String @id @default(cuid())
   nombre String
   descripcion String 
   precio Int
-  idCategoria String
+  categoria Categoria
 
-  categoria CategoriaPlato @relation(fields: [idCategoria], references: [idCategoria])
+  //categoria CategoriaPlato @relation(fields: [idCategoria], references: [idCategoria])
   pedidos PedidoDet[]
 
   @@map("platos")
