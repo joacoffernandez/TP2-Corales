@@ -10,14 +10,21 @@ import { jwtHandler } from "../auth/jwtHandler";
 export class UserService {
   private userRepository = new UserRepository;
   
-  async registerUser(username: string, password: string, email: string, telefono: number, direccion:string  ): Promise<User> {
+  async registerUser(username: string, password: string, email: string, telefono: number, direccion:string  ): Promise<{ user: User, token: string }> {
 
     await UserValidator.validate(username, password, email, telefono, direccion, this.userRepository);
 
     try {
       const hashed_password = await bcrypt.hash(password, 10);
       const user = await this.userRepository.createUser(username, email, hashed_password, telefono, direccion);
-      return user;
+
+      const token = await jwtHandler.generateAccessToken({
+        id: user.idUser,
+        username: user.username,
+        rol: user.rol as Rol
+      });
+
+      return {user, token};
     } catch (error) {
       throw new Error((error as any).message || "Error al crear el usuario. Mira los logs para más información.");
     }
