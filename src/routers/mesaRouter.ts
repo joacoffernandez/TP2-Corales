@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import { UserService } from "../services/userService"
-import { adminMiddleware, authMiddleware, userMiddleware } from "../auth/middleware";
+import { adminMiddleware, adminOrMozoMiddleware, authMiddleware, userMiddleware } from "../auth/middleware";
 import { MesaService } from "../services/mesaService";
 
 interface CreateUserBody {
@@ -24,10 +24,10 @@ mesaRouter.get('/', async (_, res) => {
   }
 })
 
-mesaRouter.post('/', async (req, res) => {
+mesaRouter.post('/', adminOrMozoMiddleware, async (req, res) => {
   try {
-    const { id, capacidad } = req.body;
-    const mesa = await mesaService.createMesa(id, capacidad);
+    const { id } = req.body;
+    const mesa = await mesaService.createMesa(id);
     res.status(200).json({ ok: true, data: mesa })
   } catch (error) {
     res.status(500).json({ ok: false, error: (error as any).message })

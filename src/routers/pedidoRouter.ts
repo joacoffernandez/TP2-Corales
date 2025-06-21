@@ -1,8 +1,8 @@
 import { Router } from "express"
 
 import { UserService } from "../services/userService"
-import { authMiddleware } from "../auth/middleware";
-import { MesaService as PedidoService } from "../services/mesaService";
+import { adminOrMozoMiddleware, authMiddleware } from "../auth/middleware";
+import { PedidoService } from "../services/pedidoService";
 
 interface CreateUserBody {
   username: string,
@@ -15,10 +15,20 @@ const pedidoService = new PedidoService();
 
 export const pedidoRouter = Router()
 
-pedidoRouter.get('/', async (_, res) => {
+pedidoRouter.get('/cab', adminOrMozoMiddleware, async (_, res) => {
   try {
-    const mesas = await pedidoService.getAllMesas();
-    res.status(200).json({ ok: true, data: mesas })
+    const pedidos = await pedidoService.getAllPedidosCab();
+    res.status(200).json({ ok: true, data: pedidos })
+  } catch (error) {
+    res.status(500).json({ ok: false, error: (error as any).message })
+  }
+})
+
+pedidoRouter.get('/det/:idCab', adminOrMozoMiddleware, async (req, res) => {
+  try {
+    const idCab = req.params.idCab;
+    const pedidos = await pedidoService.getPedidosDetByCab(idCab);
+    res.status(200).json({ ok: true, data: pedidos })
   } catch (error) {
     res.status(500).json({ ok: false, error: (error as any).message })
   }
@@ -26,27 +36,22 @@ pedidoRouter.get('/', async (_, res) => {
 
 pedidoRouter.post('/', async (req, res) => {
   try {
-    const { id, capacidad } = req.body;
-    const mesa = await pedidoService.createMesa(id, capacidad);
+    const { direccion, platos } = req.body; // platos lista de nombres de platos
+    const userId = req.user.id;
+    const mesa = await pedidoService.createPedido(userId, direccion, platos);
     res.status(200).json({ ok: true, data: mesa })
   } catch (error) {
     res.status(500).json({ ok: false, error: (error as any).message })
   }
 })
 
-pedidoRouter.get('/reservar/:id', async (req, res) => {
+pedidoRouter.put('/:idCab', adminOrMozoMiddleware, async (req, res) => {
   try {
-    if (!req.user) {
-      res.status(401).json({ ok: false, error: 'Usuario no autenticado' });
-      return;
-    }
-
-    const id = Number(req.params.id);
-    const mesa = await pedidoService.reservarMesa(id, req.user.id);
-    res.status(200).json({ ok: true, data: mesa })
+    const idCab = req.params.idCab;
+    const { estado } = req.body; // estado puede ser 'PENDIENTE' 'EN_COCINA' 'ENVIADO'
+    const pedido = await pedidoService.updateEstadoPedido(idCab, estado);
+    res.status(200).json({ ok: true, data: pedido })
   } catch (error) {
     res.status(500).json({ ok: false, error: (error as any).message })
   }
 })
-
-/* disponibilizar mesa admin */ 

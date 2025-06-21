@@ -6,7 +6,7 @@ enum Categoria {
 
 model Plato {
   idPlato      String @id @default(cuid())
-  nombre String
+  nombre String @unique
   descripcion String 
   precio Int
   categoria Categoria

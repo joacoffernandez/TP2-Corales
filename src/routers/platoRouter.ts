@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import { UserService } from "../services/userService"
-import { adminMiddleware, authMiddleware, userMiddleware } from "../auth/middleware";
+import { adminMiddleware, adminOrMozoMiddleware, authMiddleware, userMiddleware } from "../auth/middleware";
 import { PlatoService } from "../services/platoService";
 
 interface CreateUserBody {
@@ -24,7 +24,7 @@ platoRouter.get('/', async (_, res) => {
   }
 })
 
-platoRouter.post('/', async (req, res) => {
+platoRouter.post('/', adminMiddleware, async (req, res) => {
   try {
     const { nombre, descripcion, precio, categoria } = req.body;
     const plato = await platoService.createPlato(nombre, descripcion, precio, categoria);
@@ -33,23 +33,3 @@ platoRouter.post('/', async (req, res) => {
     res.status(500).json({ ok: false, error: (error as any).message })
   }
 })
-
-platoRouter.get('/reservar/:id', async (req, res) => {
-  try {
-    const id = Number(req.params.id);
-    const mesa = await platoService.reservarMesa(id, req.user.id);
-    res.status(200).json({ ok: true, data: mesa })
-  } catch (error) {
-    res.status(500).json({ ok: false, error: (error as any).message })
-  }
-})
-
-platoRouter.get('/disponibilizar/:id', adminMiddleware, async (req, res) => {
-    try {  
-        const id = Number(req.params.id);
-        const mesa = await platoService.disponibilizarMesa(id);
-        res.status(200).json({ ok: true, data: mesa })
-    } catch (error) {
-        res.status(500).json({ ok: false, error: (error as any).message })
-    }
-});

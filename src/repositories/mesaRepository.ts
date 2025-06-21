@@ -4,12 +4,11 @@ import { db } from "../db/db";
 
 export class MesaRepository {
 
-    async createMesa(id: number, capacidad: number): Promise<Mesa | null> {
+    async createMesa(id: number): Promise<Mesa | null> {
         const mesa = await db.mesa.create({
             data: {
                 idMesa: id, 
-                disponible: true,
-                capacidad: capacidad
+                disponible: true
             }
         });
         return mesa;

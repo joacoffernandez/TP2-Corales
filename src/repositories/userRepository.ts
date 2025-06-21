@@ -4,13 +4,14 @@ import { db } from "../db/db";
 
 export class UserRepository {
 
-    async createUser(username: string, email: string, password: string, telefono: number): Promise<User> {
+    async createUser(username: string, email: string, password: string, telefono: number, direccion: string): Promise<User> {
         const user = await db.user.create({
             data: {
                 username,
                 email,
                 password,
-                telefono
+                telefono,
+                direccion
             }
         });
         return user;
@@ -44,4 +45,13 @@ export class UserRepository {
         });
         return updatedUser;
     }
+
 }
+
+
+/*
+        return db.user.findUnique({
+            where: { idUser: userId },
+            select: { direccion: true }
+        }).then(user => user?.direccion || "");
+*/

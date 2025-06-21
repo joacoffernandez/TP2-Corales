@@ -11,8 +11,8 @@ model User {
   password  String // hashed
   telefono Int
   rol      Rol @default(USER)
+  direccion String
 
-  direcciones Direccion[] 
   mesasReservadas Mesa[]
   pedidos PedidoCab[]
 

@@ -1,42 +1,68 @@
-import { Mesa } from "@prisma/client";
+import { Estado, Mesa, PedidoCab, PedidoDet, Plato } from "@prisma/client";
 
 import { db } from "../db/db";
 
 export class PedidoRepository {
 
-    async createPedido(id: number, capacidad: number): Promise<Mesa | null> {
-        const mesa = await db.pedidoCab.create({
+    async createPedidoCab(idUser: string, direccion: string, descuento: number): Promise<PedidoCab | null> {
+        const pedido = await db.pedidoCab.create({
             data: {
-                idMesa: id, 
-                disponible: true,
-                capacidad: capacidad
+                idUser, 
+                descuento,
+                direccion
             }
         });
-        return mesa;
+        return pedido;
     }
 
-    async getAllPedidos(): Promise<Mesa[]> {
-        const mesas = await db.mesa.findMany({
-            where: { disponible: true }
-        });
-        return mesas;
-    }
-
-    async getPedidoById(id: number): Promise<Mesa | null> {
-        const mesa = await db.mesa.findUnique({
-            where: { idMesa: id }
-        });
-        return mesa;
-    }
-
-    async reservarMesa(id: number, idUser: string): Promise<Mesa | null> {
-        const updatedMesa = await db.mesa.update({
-            where: { idMesa: id },
-            data: { 
-                disponible: false, 
-                idUser: idUser 
+    async createPedidoDet(idPedidoCab: string, idPlato: string): Promise<PedidoDet | null> {
+        const pedido = await db.pedidoDet.create({
+            data: {
+                idPedidoCab, 
+                idPlato
             }
         });
-        return updatedMesa;
+        return pedido;
     }
+
+    async getPedidosByUserId(idUser: string): Promise<PedidoCab[]> {
+        const pedidos = await db.pedidoCab.findMany({
+            where: { idUser }
+        });
+        return pedidos;
+    }
+
+    async updatePedidoCab(idPedidoCab: string, montoTotal: number): Promise<PedidoCab | null> {
+        const updatedPedido = await db.pedidoCab.update({
+            where: { idPedidoCab },
+            data: { monto: montoTotal }
+        });
+        return updatedPedido;
+    }
+
+    async getAllPedidosCab(): Promise<PedidoCab[]> {
+        const pedidos = await db.pedidoCab.findMany({});
+        return pedidos;
+    }
+
+    async getPedidosDetByCab(idPedidoCab: string): Promise<PedidoDet[]> {
+        const pedidos = await db.pedidoDet.findMany({where: { idPedidoCab }});
+        return pedidos;
+    }
+
+    async getPedidoCabById(idCab: string): Promise<PedidoCab | null> {
+        const pedido = await db.pedidoCab.findUnique({
+            where: { idPedidoCab: idCab }
+        });
+        return pedido;
+    }
+
+    async updateEstadoPedidoCab(idPedidoCab: string, estado: Estado): Promise<PedidoCab | null> {
+        const updatedPedido = await db.pedidoCab.update({
+            where: { idPedidoCab },
+            data: { estado }
+        });
+        return updatedPedido;
+    }
+
 }

@@ -16,8 +16,8 @@
 
     authRouter.post('/register', async (req, res) => {
         try {
-            const { username, password, email, telefono } = req.body;
-            const user = await userService.registerUser(username, password, email, telefono);
+            const { username, password, email, telefono, direccion } = req.body;
+            const user = await userService.registerUser(username, password, email, telefono, direccion);
             res.status(200).json({ ok: true, data: user });
         } catch (error) {
             if (error instanceof AuthError) {

@@ -6,19 +6,17 @@ import { AuthError, ConflictError, NotFoundError, ValidationError } from "../aut
 import bcrypt from "bcryptjs";
 import { jwtHandler } from "../auth/jwtHandler";
 
-export type Rol = 'USER' | 'MOZO' | 'ADMIN';
 
 export class UserService {
   private userRepository = new UserRepository;
   
-  async registerUser(username: string, password: string, email: string, telefono: number  ): Promise<User> {
+  async registerUser(username: string, password: string, email: string, telefono: number, direccion:string  ): Promise<User> {
 
-    await UserValidator.validate(username, password, email, telefono, this.userRepository);
-
+    await UserValidator.validate(username, password, email, telefono, direccion, this.userRepository);
 
     try {
       const hashed_password = await bcrypt.hash(password, 10);
-      const user = await this.userRepository.createUser(username, email, hashed_password, telefono);
+      const user = await this.userRepository.createUser(username, email, hashed_password, telefono, direccion);
       return user;
     } catch (error) {
       throw new Error((error as any).message || "Error al crear el usuario. Mira los logs para más información.");
@@ -98,26 +96,18 @@ export class UserService {
     }
   }
 
-  async getUserById(userId: string) {
+  async getUserByUsername(username: string) {
     try {
-      const user = await db.user.findFirst({
-        where: {
-          id: userId,
-          deletedAt: null
-        },
-        include: {
-          posts: true
-        }
-      })
+      const user = await this.userRepository.getUserByUsername(username);
 
       if (!user) {
-        throw new Error(`No se encontró el usuario con id ${userId}`)
+        throw new Error(`No se encontró el usuario con username '${username}'`)
       }
 
       return user;
     } catch (error) {
       console.error(error);
-      throw new Error(`Error al obtener usuario con id ${userId}. Mira los logs para más información.`)
+      throw new Error(`Error al obtener usuario con username '${username}'. Mira los logs para más información.`)
     }
   }
 
@@ -127,11 +117,12 @@ export class UserService {
 
 
 class UserValidator {
-  static async validate(username: string, password: string, email: string, telefono: number, repository: UserRepository) {
+  static async validate(username: string, password: string, email: string, telefono: number, direccion:string, repository: UserRepository) {
     await UserValidator.validateUsername(username, repository);
     await UserValidator.validateEmail(email, repository);
     UserValidator.validatePassword(password);
     UserValidator.validateTelefono(telefono);
+    UserValidator.validateDireccion(direccion); 
   }
 
   static async validateUsername(username: string, repository: UserRepository) {
@@ -191,6 +182,12 @@ class UserValidator {
     const telefonoRegex = /^\d{10}$/; // Validación simple para un número de teléfono de 10 dígitos
     if (!telefonoRegex.test(telefono.toString())) {
       throw new ValidationError("El teléfono debe ser un número de 10 dígitos.");
+    }
+  }
+
+  static validateDireccion(direccion: string) {
+    if (!direccion) {
+      throw new ValidationError("La dirección es obligatoria.");
     }
   }
 }

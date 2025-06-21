@@ -1,9 +1,0 @@
-model EstadoPedido {
-  idEstadoPedido Int @id 
-  nombre String 
-  descripcion String 
- 
-  //pedidos PedidoCab[]
-
-  @@map("estadosPedidos")
-}

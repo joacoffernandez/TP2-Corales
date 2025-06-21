@@ -21,9 +21,9 @@ export class MesaService {
     }
   }
 
-  async createMesa(id: number, capacidad: number): Promise<Mesa | null> {
+  async createMesa(id: number): Promise<Mesa | null> {
     try {
-      const mesa = await this.mesaRepository.createMesa(id, capacidad);
+      const mesa = await this.mesaRepository.createMesa(id);
       return mesa;
     } catch (error) {
       console.error(error);

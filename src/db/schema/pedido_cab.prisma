@@ -9,12 +9,11 @@ model PedidoCab {
     idUser String
     estado Estado @default(PENDIENTE)
     monto Float?
-    descuento Int
-    idDireccion String
+    descuento Float
+    direccion String
 
     user User @relation(fields: [idUser], references: [idUser])
     //estado  EstadoPedido @relation(fields: [idEstado], references: [idEstadoPedido])
-    direccion Direccion @relation(fields: [idDireccion], references: [idDireccion])
     pedidos_det PedidoDet[]
 
     @@map("pedidos_cab")
