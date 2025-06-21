@@ -1,28 +1,32 @@
-# TP2-Desarrollo de Sistemas
+#  TP2 – Desarrollo de Sistemas
+
+##  Integrantes
+
+- **Joaquin Fernández**  
+- **Santino Pirraglia Janicki**
 
 ---
 
-## Integrantes
+##  Arquitectura del Proyecto
 
-- Joaquin FERNANDEZ  
-- Santino PIRRAGLIA JANICKI 
+El sistema sigue una **arquitectura en capas**, organizada de la siguiente forma:
+
+- **Routers**: gestionan las rutas HTTP y definen los endpoints de la API.
+- **Services**: contienen la lógica de negocio, separados de la base de datos.
+- **Repositories**: encapsulan el acceso a datos mediante Prisma, aislando los detalles de la persistencia.
+- **Prisma ORM**: se utiliza para interactuar con una base de datos **SQLite**, simplificando las operaciones CRUD.
+
+Además, se implementan dos tipos de usuarios:
+- **Clientes**
+- **Administradores**
+
+El control de acceso y permisos se maneja mediante **middlewares de autenticación y autorización**, basados en **JWT tokens**.
 
 ---
 
-## Diseño
-El sistema está diseñado con una arquitectura en capas, separando las rutas (routers), la lógica de negocio (services), la capa de acceso a datos (repositories) y la persistencia mediante Prisma (ORM), que facilita la interacción con la base de datos SQLite.
+##  Instalación y Compilación
 
-La capa de repositories se encarga de centralizar las operaciones directas sobre la base de datos, permitiendo que los servicios trabajen con una interfaz limpia y separada de los detalles del ORM o la base de datos.
-
-Se implementan dos tipos de usuarios: clientes y administradores, con diferentes niveles de permisos controlados mediante middlewares de autenticación y autorización.
-
----
-
-## Cómo compilar
-- Instalar las dependencias con "npm install".
-
-- Generar el cliente Prisma usando "npm run db:generate".
-
-- Ejecutar las migraciones para crear la base de datos con "npm run db:migrate".
-
-- Compilar "npm run dev" para correr la API.
+1. Clonar el repositorio  
+   ```bash
+   git clone <repo_url>
+   cd <nombre_del_proyecto>
