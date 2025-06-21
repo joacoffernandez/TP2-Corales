@@ -55,3 +55,13 @@ pedidoRouter.put('/:idCab', adminOrMozoMiddleware, async (req, res) => {
     res.status(500).json({ ok: false, error: (error as any).message })
   }
 })
+
+pedidoRouter.get('/:username', async (req, res) => {
+  try {
+    const username = req.params.username;
+    const pedido = await pedidoService.getPedidosCabByUsername(username);
+    res.status(200).json({ ok: true, data: pedido })
+  } catch (error) {
+    res.status(500).json({ ok: false, error: (error as any).message })
+  }
+})

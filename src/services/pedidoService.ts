@@ -34,6 +34,25 @@ export class PedidoService {
     }
   }
 
+  async getPedidosCabByUsername(username: string): Promise<PedidoCab[]> {
+    try {
+        const user = await this.userRepository.getUserByUsername(username);
+        if (!user) {
+            throw new NotFoundError("Usuario no encontrado.");
+        }
+    
+        const pedidos = await this.pedidoRepository.getPedidosByUserId(user.idUser);
+        return pedidos;
+        } catch (error) {
+            if (error instanceof NotFoundError) {
+                throw error;
+            } else {
+                console.error(error);
+                throw new Error("Error al obtener los pedidos del usuario. Mira los logs para más información.");
+            }
+        }
+    }
+
   private async calcularDescuento(userId: string): Promise<number> {
     try {
       const user = await this.userRepository.getUserById(userId);
